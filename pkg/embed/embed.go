@@ -23,8 +23,8 @@ func EmbedReleaseDataInBinary(binPath string, releasePath string, outputPath str
 		return fmt.Errorf("failed to read binary: %w", err)
 	}
 
-	start := bytes.Index(binContent, beginReleaseDelimiterBytes())
-	end := bytes.Index(binContent, endReleaseDelimiterBytes())
+	start := bytes.LastIndex(binContent, beginReleaseDelimiterBytes())
+	end := bytes.LastIndex(binContent, endReleaseDelimiterBytes())
 
 	if start != -1 && end != -1 {
 		// some release data is already embedded in the binary, remove it
@@ -82,12 +82,12 @@ func ExtractReleaseDataFromBinary(exe string) ([]byte, error) {
 		return nil, fmt.Errorf("failed to read executable: %w", err)
 	}
 
-	start := bytes.Index(binContent, beginReleaseDelimiterBytes())
+	start := bytes.LastIndex(binContent, beginReleaseDelimiterBytes())
 	if start == -1 {
 		return nil, nil
 	}
 
-	end := bytes.Index(binContent, endReleaseDelimiterBytes())
+	end := bytes.LastIndex(binContent, endReleaseDelimiterBytes())
 	if end == -1 {
 		return nil, fmt.Errorf("failed to find end delimiter in executable")
 	}
