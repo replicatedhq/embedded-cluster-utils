@@ -25,7 +25,7 @@ func EmbedReleaseDataInBinary(binPath string, releasePath string, outputPath str
 
 	// in arm64 binaries, the delimiters will already be part of the binary content in plain text,
 	// so we need to check if the binary content _ends_ with the end delimiter in order to
-	// to determine if a release data is already embedded in the binary.
+	// determine if a release data is already embedded in the binary.
 	if bytes.HasSuffix(binContent, endReleaseDelimiterBytes()) {
 		start := bytes.LastIndex(binContent, beginReleaseDelimiterBytes())
 		end := bytes.LastIndex(binContent, endReleaseDelimiterBytes())
