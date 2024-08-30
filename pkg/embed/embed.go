@@ -23,11 +23,12 @@ func EmbedReleaseDataInBinary(binPath string, releasePath string, outputPath str
 		return fmt.Errorf("failed to read binary: %w", err)
 	}
 
-	start := bytes.LastIndex(binContent, beginReleaseDelimiterBytes())
-	end := bytes.LastIndex(binContent, endReleaseDelimiterBytes())
-
-	if start != -1 && end != -1 {
-		// some release data is already embedded in the binary, remove it
+	// in arm64 binaries, the delimiters will already be part of the binary content in plain text,
+	// so we need to check if the binary content _ends_ with the end delimiter in order to
+	// to determine if a release data is already embedded in the binary.
+	if bytes.HasSuffix(binContent, endReleaseDelimiterBytes()) {
+		start := bytes.LastIndex(binContent, beginReleaseDelimiterBytes())
+		end := bytes.LastIndex(binContent, endReleaseDelimiterBytes())
 		binContent = append(binContent[:start], binContent[end+len(endReleaseDelimiterBytes()):]...)
 	}
 
